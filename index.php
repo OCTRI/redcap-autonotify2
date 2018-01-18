@@ -41,11 +41,11 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['redcap_url']) ) {
 require_once "../../redcap_connect.php";
 require_once "common.php";
 
-$log_file = "/var/log/redcap/autonotify2.log";
+// $log_file = "/var/log/redcap/autonotify2.log";
 
 // If a log file hasn't been set, then let's default to the REDCap temp folder
 if (!isset($log_file)) {
-    $log_file = APP_PATH_TEMP . "autonotify_plugin.log";
+    $log_file = APP_PATH_TEMP . "autonotify_plugin2.log";
 }
 
 // Create an AutoNotify Object

@@ -45,7 +45,7 @@ class AutoNotify {
         }
         $this->redcap_data_access_group = voefr('redcap_data_access_group');
         $this->instrument_complete = voefr($this->instrument.'_complete');
-        
+
     }
 
     // Converts old autonotify configs that used the url into new ones that use the log table
@@ -88,7 +88,7 @@ class AutoNotify {
         $sql = "SELECT l.sql_log, l.ts
 			FROM redcap_log_event l WHERE
 		 		l.project_id = " . intval($this->project_id) . "
-			AND l.page = 'PLUGIN'
+			AND (l.page = 'PLUGIN' OR l.page LIKE '%autonotify2%')
 			AND l.description = '" . AutoNotify::PluginName . " Config'
 			ORDER BY ts DESC LIMIT 1";
         $q = db_query($sql);
@@ -273,7 +273,7 @@ class AutoNotify {
 
         // Prepare message
         $email = new Message();
-        
+
         $email->setTo(self::pipeThis($trigger['to']));
         $email->setBcc(self::pipeThis($trigger['bcc']));
         $email->setFrom(self::pipeThis($trigger['from']));
@@ -312,9 +312,9 @@ class AutoNotify {
     public function checkForPriorNotification($title, $scope=0) {
         if (!REDCap::isLongitudinal()) $scope = 1; // Record match only is sufficient
         $sql = "SELECT l.data_values, l.ts
-			FROM redcap_log_event l WHERE 
+			FROM redcap_log_event l WHERE
 		 		l.project_id = {$this->project_id}
-			AND l.page = 'PLUGIN' 
+			AND (l.page = 'PLUGIN' OR l.page LIKE '%autonotify2%')
 			AND l.description = 'AutoNotify2 Alert';";
         $q = db_query($sql);
 
@@ -520,7 +520,7 @@ class AutoNotify {
                         RCView::li(array(),'&raquo; user@example.com').
                         RCView::li(array(),'&raquo; user@example.com, anotheruser@example.com')
                     )
-                )  
+                )
             ).RCView::div(array('id'=>'from_info','style'=>'display:none;'),
                 RCView::p(array(),'Please note that some spam filters my classify this email as spam - you should test prior to going into production.'.
                     RCView::ul(array('style'=>'margin-left:15px;'),
@@ -574,7 +574,7 @@ function renderTemporaryMessage($msg, $title='') {
 		t".$id." = setTimeout(function(){
 			$('#".$id."').hide('blind',1500);
 		},10000);
-		$('#".$id."').bind( 'click', function() { 
+		$('#".$id."').bind( 'click', function() {
 			$(this).hide('blind',1000);
 			window.clearTimeout(t".$id.");
 		});
@@ -709,4 +709,3 @@ function viewLog($file) {
 
 
 ?>
-
