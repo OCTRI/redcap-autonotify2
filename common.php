@@ -224,7 +224,7 @@ class AutoNotify {
     // Now that we're not storing the DET in the query string - this simply needs to be the url to this plugin
     public function getDetUrl() {
         // Build the url of the page that called us
-        $isHttps = isset($_SERVER['HTTPS']) AND !empty($_SERVER['HTTPS']) AND $_SERVER['HTTPS'] != 'off';
+        $isHttps = true;
 
         // Force http for certain domains
         global $http_only;
